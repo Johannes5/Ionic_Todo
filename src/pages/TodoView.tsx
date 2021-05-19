@@ -1,31 +1,33 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import {
     IonBackButton,
     IonButtons,IonContent, IonFab, IonFabButton, IonHeader,
     IonIcon, IonList,
     IonPage, IonTitle,
     IonToolbar,
-} from "@ionic/react";
+} from "@ionic/react"
 
-import {addOutline} from "ionicons/icons";
+import {addOutline} from "ionicons/icons"
 
-import { useParams } from "react-router-dom";
-
-
-import {DUMMY_DATA} from "./Lists";
-import { TodoItem } from '../components/TodoItem';
-import {EditModal} from "../components/EditModal";
+import { useParams } from "react-router-dom"
 
 
-export const ListTodos: React.FC = () => {
-    // selectedList
-    const selectedListId = useParams<{ listId: string }>().listId;
-    const selectedList = DUMMY_DATA.find(l => l.id === selectedListId)
-    let selectedTodoList = DUMMY_DATA.find(l => l.id === selectedListId)?.todos
-    // console.log("Howdy",selectedListId, selectedList?.listTitle);
+import { TodoItem } from '../components/TodoItem'
+import {EditModal} from "../components/EditModal"
+
+import ListContext from '../list-context'
+
+export const TodoView: React.FC = () => {
+    const listContext = useContext(ListContext)
+    const selectedListId = useParams<{ listId: string }>().listId
+
+    const selectedList = listContext.lists.find(l => l.id === selectedListId) //DUMMY_DATA.find(l => l.id === selectedListId)
+    let selectedTodoList = selectedList?.todos //DUMMY_DATA.find(l => l.id === selectedListId)?.todos
+
+
 
     //state
-    const [selectedTodo, setSelectedTodo] = React.useState<any>()
+    const [selectedTodo, setSelectedTodo] = React.useState<any>(null)
     const [showEditModal, setShowEditModal] = React.useState(false)
 
 
@@ -34,14 +36,15 @@ export const ListTodos: React.FC = () => {
 
     // checkOffHandler
     const checkOffHandler = (id: string) => {
-        selectedTodoList?.filter(l => l.id === id)
+        //selectedTodoList?.filter(l => l.id === id)
+        listContext.deleteTodo(selectedListId, id)
     }
 
     // editHandler
-    const editHandler = (id: string) => {
+    const editHandler = (id: string, text: string) => {
         setShowEditModal(true)
         closeSliderRef.current?.closeOpened()
-        setSelectedTodo(id)
+        setSelectedTodo({id: id, text: text})
     }
 
     const cancelEditTodoHandler = () => {
@@ -50,25 +53,27 @@ export const ListTodos: React.FC = () => {
     const saveTodoHandler = (text: string) => {
         if (selectedTodo){
             //update
-            selectedTodoList?.map((todo)=> {
-                if(todo.id === selectedTodo.id){
-                    todo.text = text
-                }
-            })
+            listContext.updateTodo(selectedListId, selectedTodo.id, text)
         } else {
             // create
-            selectedTodoList?.push({id: selectedTodo.id, text: text})
+            //selectedTodoList!.push({id: selectedTodo.id, text: text})
+            listContext.addTodo(selectedListId, text)
+            console.log("saveTodoHandlerr", selectedListId, text);
         }
 
         setShowEditModal(false)
-        console.log("saveTodoHandler", text);
+        //setSelectedTodo({id: selectedTodo.id,  text: text})
 
+    }
+    const addHandler = () => {
+        setShowEditModal(true)
+        //setSelectedTodo({id: uuidv4(), text: ''})
     }
 
     return (
         <IonPage>
             <EditModal type={"todo"} show={showEditModal} onCancel={cancelEditTodoHandler}
-                       editedTodo={selectedTodo} onSaveTodo={saveTodoHandler}/>
+                       editedItem={selectedTodo} onSaveTodo={saveTodoHandler}/>
             <IonHeader>
                 <IonToolbar>
                     <IonButtons slot="start">
@@ -84,12 +89,12 @@ export const ListTodos: React.FC = () => {
                     {selectedTodoList && selectedTodoList.map((list) => (
                         <TodoItem id={list.id} text={list.text}
                                   checkOffHandler={checkOffHandler.bind(null, list.id)}
-                                  editHandler={editHandler.bind(null, list.id)}
+                                  editHandler={editHandler.bind(null, list.id, list.text)}
                                   closeSliderRef={closeSliderRef}/>
                     ))}
                 </IonList>
                 <IonFab horizontal="end" vertical="bottom" slot="fixed">
-                    <IonFabButton >
+                    <IonFabButton onClick={addHandler}>
                         <IonIcon icon={addOutline}>{}</IonIcon>
                     </IonFabButton>
                 </IonFab>

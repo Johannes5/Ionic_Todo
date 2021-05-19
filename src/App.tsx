@@ -4,8 +4,7 @@ import { IonReactRouter } from '@ionic/react-router';
 
 import ListTabs from './pages/ListTabs';
 /*import Filter from '../../Ionic Courses/src/pages/Filter';
-import {SideDrawer} from '../../Ionic Courses/src/pages/SideDrawer';
-import CoursesContextProvider from '../../Ionic Courses/src/data/CoursesContextProvider';*/
+import {SideDrawer} from '../../Ionic Courses/src/pages/SideDrawer';*/
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -25,19 +24,23 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import ListContextProvider from "./ListContextProvider";
+import React from "react";
 
 const App: React.FC = () => (
     <IonApp>
       <IonReactRouter>
-          <IonRouterOutlet id="main">
-            {/*<Route path="/filter" exact>
+          <ListContextProvider>
+              <IonRouterOutlet id="main">
+                  {/*<Route path="/filter" exact>
               <Filter/>
             </Route>*/}
-            <Route path="/lists">
-              <ListTabs/>
-            </Route>
-            <Redirect path="" to="/lists" exact/>
-          </IonRouterOutlet>
+                  <Route path="/lists">
+                      <ListTabs/>
+                  </Route>
+                  <Redirect path="" to="/lists" exact/>
+              </IonRouterOutlet>
+          </ListContextProvider>
       </IonReactRouter>
     </IonApp>
 );

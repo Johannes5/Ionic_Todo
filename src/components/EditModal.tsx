@@ -10,14 +10,13 @@ import {
     IonText, IonTitle,
     IonToolbar
 } from '@ionic/react'
-import React, {MutableRefObject, useRef, useState} from 'react'
-import { v4 as uuidv4 } from 'uuid'
+import React, { useRef, useState} from 'react'
 
 export const EditModal: React.FC<{
     type: 'todo' | 'list';
     show: boolean;
     onCancel: () => void;
-    editedTodo: { id: string; text: string } | null; //why not optional?
+    editedItem: { id: string; text: string } | null; //why not optional?
 
     //This modal can save either Todos or Lists -> optional props
     onSaveList?: (title: string, date: Date) => void;
@@ -87,7 +86,7 @@ export const EditModal: React.FC<{
                                 <IonItem>
                                     <IonInput ref={inputRef}
                                               value={input}
-                                              placeholder={props.editedTodo?.text}
+                                              placeholder={props.editedItem?.text}
                                               onIonChange={e => setInput(e.detail.value!)}>{}
                                     </IonInput>
                                 </IonItem>
@@ -96,9 +95,9 @@ export const EditModal: React.FC<{
                     </IonRow>
                     <IonRow className="ion-text-center">
                         <IonCol>
-                            <IonText color="danger">
-                                <p>Error</p>
-                            </IonText>
+                                <IonText color="danger">
+                                    <p>{error}</p>
+                                </IonText>
                         </IonCol>
                     </IonRow>
                     <IonRow className="ion-text-right">
@@ -106,7 +105,7 @@ export const EditModal: React.FC<{
                             <IonButton expand="block" onClick={savedInputHandler}>Update</IonButton>
                         </IonCol>
                         <IonCol >
-                            <IonButton fill="clear" >Cancel</IonButton>
+                            <IonButton fill="clear" onClick={props.onCancel}>Cancel</IonButton>
                         </IonCol>
 
                     </IonRow>

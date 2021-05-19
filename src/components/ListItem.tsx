@@ -1,13 +1,13 @@
 import React from 'react'
 import {
-    IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonPage,
-} from "@ionic/react";
-
+    IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle,
+} from "@ionic/react"
 
 export const ListItem: React.FC<{
     id: string,
     createdAt: Date,
-    title: string
+    title: string,
+    editHandler: (event: React.MouseEvent) => void,
 }> = props => {
     return (
             <IonCard>
@@ -21,7 +21,7 @@ export const ListItem: React.FC<{
                     })}</IonCardSubtitle>
                 </IonCardHeader>
                 <IonCardContent>
-                    <IonButton className="ion-text-left" fill="default">
+                    <IonButton className="ion-text-left" fill="default" onClick={props.editHandler}>
                         Edit
                     </IonButton>
                     <IonButton className="ion-text-right" fill="clear" routerLink={`/lists/${props.id}`}>

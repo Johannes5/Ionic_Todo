@@ -9,8 +9,9 @@ import {
 } from '@ionic/react';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import { list, trophyOutline } from 'ionicons/icons';
-import Lists from "./Lists";
-import {ListTodos} from './ListTodos'
+import ListView from "./ListView";
+import {TodoView} from './TodoView'
+import {AllTodos} from "./AllTodos";
 
 
 
@@ -21,13 +22,13 @@ const ListTabs: React.FC = () => {
         <Redirect path='/lists' to='/lists/list' exact />
         <Switch>
           <Route path='/lists/list' exact>
-           <Lists />
+           <ListView />
           </Route>
           <Route path='/lists/all-todos' exact>
-          {/*  <AllTodos />*/}
+            <AllTodos />
           </Route>
           <Route path='/lists/:listId'>
-            <ListTodos />
+            <TodoView />
           </Route>
         </Switch>
       </IonRouterOutlet>
